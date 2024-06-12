@@ -8,15 +8,21 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "turnos")
 public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "paciente_id", referencedColumnName = "id")
     private Paciente paciente;
-    @Column
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "odontologo_id", referencedColumnName = "id")
     private Odontologo odontologo;
+
     @Column
     private LocalDate fecha;
 

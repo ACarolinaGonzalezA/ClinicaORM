@@ -6,6 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Entity
 @Table(name = "domicilios")
 public class Domicilio {
     @Id
@@ -19,6 +20,7 @@ public class Domicilio {
     private String localidad;
     @Column
     private String provincia;
+
 
     public Domicilio(String calle, Integer numero, String localidad, String provincia) {
         this.calle = calle;

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 
@@ -22,7 +24,9 @@ public class Odontologo {
 
     public Odontologo() {
     }
-
+    // Relación inversa opcional
+    // @OneToMany(mappedBy = "odontologo", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private Set<Turno> turnos;
     public Odontologo(Long id, String matricula, String nombre, String apellido) {
         this.id = id;
         this.matricula = matricula;
