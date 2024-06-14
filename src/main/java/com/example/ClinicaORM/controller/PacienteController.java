@@ -1,5 +1,6 @@
 package com.example.ClinicaORM.controller;
 
+import com.example.ClinicaORM.entity.Odontologo;
 import com.example.ClinicaORM.entity.Paciente;
 import com.example.ClinicaORM.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,25 @@ public class PacienteController {
     public ResponseEntity<Paciente> guardarPaciente(@RequestBody Paciente paciente){
         return ResponseEntity.ok(pacienteService.guardarPaciente(paciente));
     }
-    @PutMapping
-    public ResponseEntity<String> actualizarPaciente(@RequestBody Paciente paciente){
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarPaciente(@PathVariable Long id, @RequestBody Paciente paciente) {
+        Optional<Paciente> pacienteBuscado = pacienteService.buscarPorId(id);
+        if (pacienteBuscado.isPresent()) {
+            Paciente pacienteActualizado = pacienteBuscado.get();
+            pacienteActualizado.setNombre(paciente.getNombre());
+            pacienteActualizado.setApellido(paciente.getApellido());
+            pacienteActualizado.setCedula(paciente.getCedula());
+            pacienteActualizado.setFechaIngreso(paciente.getFechaIngreso());
+            pacienteActualizado.setDomicilio(paciente.getDomicilio());
+            pacienteActualizado.setEmail(paciente.getEmail());
 
-        Optional<Paciente> pacienteBuscado= pacienteService.buscarPorId(paciente.getId());
-        if(pacienteBuscado.isPresent()){
-            pacienteService.actualizarPaciente(paciente);
-            return ResponseEntity.ok("paciente actualizado con exito");
-        }else{
-            return  ResponseEntity.badRequest().build();
+            pacienteService.actualizarPaciente(pacienteActualizado);
+            return ResponseEntity.ok("Paciente actualizado con éxito");
+        } else {
+            return ResponseEntity.badRequest().body("Paciente no encontrado");
         }
-
     }
+
     @GetMapping("/buscar/id/{id}")
     public ResponseEntity<Optional<Paciente>> buscarPorPaciente(@PathVariable Long id){
         return ResponseEntity.ok(pacienteService.buscarPorId(id));

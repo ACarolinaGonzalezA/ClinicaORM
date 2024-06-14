@@ -60,12 +60,16 @@ window.addEventListener('load', function () {
                      resetUploadForm();})
     });
 
-
     function resetUploadForm(){
-        document.querySelector('#titulo').value = "";
-        document.querySelector('#categoria').value = "";
-         document.querySelector('#premios').value = "";
-
+       document.querySelector('#nombre').value = "";
+       document.querySelector('#apellido').value = "";
+       document.querySelector('#cedula').value = "";
+       document.querySelector('#fechaIngreso').value = "";
+       document.querySelector('#calle').value = "";
+       document.querySelector('#numero').value = "";
+       document.querySelector('#localidad').value = "";
+       document.querySelector('#provincia').value = "";
+       document.querySelector('#email').value = "";
     }
 
     (function(){
