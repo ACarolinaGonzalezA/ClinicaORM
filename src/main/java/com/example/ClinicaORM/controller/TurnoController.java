@@ -55,5 +55,37 @@ public class TurnoController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarTurno(@PathVariable Long id, @RequestBody Turno turno) {
+        Optional<Turno> turnoBuscado = turnoService.buscarPorId(id);
+        if (turnoBuscado.isPresent()) {
+            Turno turnoExistente = turnoBuscado.get();
+
+            // Validar y asignar Paciente
+            Optional<Paciente> pacienteBuscado = pacienteService.buscarPorId(turno.getPaciente().getId());
+            if (pacienteBuscado.isPresent()) {
+                turnoExistente.setPaciente(pacienteBuscado.get());
+            } else {
+                return ResponseEntity.badRequest().body("Paciente no encontrado");
+            }
+
+            // Validar y asignar Odontologo
+            Optional<Odontologo> odontologoBuscado = odontologoService.buscarPorId(turno.getOdontologo().getId());
+            if (odontologoBuscado.isPresent()) {
+                turnoExistente.setOdontologo(odontologoBuscado.get());
+            } else {
+                return ResponseEntity.badRequest().body("Odontólogo no encontrado");
+            }
+
+            // Asignar otros campos actualizables
+            turnoExistente.setFecha(turno.getFecha());
+
+            // Guardar la actualización
+            turnoService.actualizarTurno(turnoExistente);
+            return ResponseEntity.ok("Turno actualizado con éxito");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
