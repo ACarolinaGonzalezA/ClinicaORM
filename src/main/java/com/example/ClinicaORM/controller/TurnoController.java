@@ -3,6 +3,7 @@ package com.example.ClinicaORM.controller;
 import com.example.ClinicaORM.entity.Turno;
 import com.example.ClinicaORM.entity.Paciente;
 import com.example.ClinicaORM.entity.Odontologo;
+import com.example.ClinicaORM.exception.BadRequestException;
 import com.example.ClinicaORM.service.OdontologoService;
 import com.example.ClinicaORM.service.PacienteService;
 import com.example.ClinicaORM.service.TurnoService;
@@ -24,7 +25,7 @@ public class TurnoController {
     private OdontologoService odontologoService;
 
     @PostMapping
-    public ResponseEntity<Turno> guardarTurno(@RequestBody Turno turno){
+    public ResponseEntity<Turno> guardarTurno(@RequestBody Turno turno) throws BadRequestException  {
         Optional<Paciente> pacienteBuscado= pacienteService.buscarPorId(turno.getPaciente().getId());
         Optional<Odontologo> odontologoBuscado= odontologoService.buscarPorId(turno.getOdontologo().getId());
 
@@ -33,7 +34,8 @@ public class TurnoController {
             turno.setOdontologo(odontologoBuscado.get());
             return ResponseEntity.ok(turnoService.registrarTurno(turno));
         }else{
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("El paciente o el odontólogo no existen.");
+            //return ResponseEntity.badRequest().build();
         }
     }
     @GetMapping

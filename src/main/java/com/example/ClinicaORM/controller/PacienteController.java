@@ -2,6 +2,7 @@ package com.example.ClinicaORM.controller;
 
 import com.example.ClinicaORM.entity.Odontologo;
 import com.example.ClinicaORM.entity.Paciente;
+import com.example.ClinicaORM.exception.ResourceNotFoundException;
 import com.example.ClinicaORM.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -59,13 +60,14 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.listarTodos());
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarPaciente(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarPaciente(@PathVariable Long id) throws ResourceNotFoundException  {
         Optional<Paciente> pacienteBuscado = pacienteService.buscarPorId(id);
         if (pacienteBuscado.isPresent()) {
             pacienteService.eliminarPaciente(id);
             return ResponseEntity.ok("Paciente eliminado con éxito");
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Paciente no encontrado");
+            //return ResponseEntity.notFound().build();
         }
     }
 }
