@@ -42,7 +42,7 @@ window.addEventListener('load', function () {
             //como primer columna pondremos el boton modificar
             //luego los datos de la pelicula
             //como ultima columna el boton eliminar
-            pacienteRow.innerHTML = '<td>' + paciente.id + '</td>' +
+            pacienteRow.innerHTML = '<td>' + updateButton + '</td>' +
                     '<td class=\"td_nombre\">' + paciente.nombre.toUpperCase() + '</td>' +
                     '<td class=\"td_apellido\">' + paciente.apellido.toUpperCase() + '</td>' +
                     '<td class=\"td_cedula\">' + paciente.cedula.toUpperCase() + '</td>' +

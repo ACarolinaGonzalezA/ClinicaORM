@@ -26,6 +26,13 @@ public class TurnoController {
 
     @PostMapping
     public ResponseEntity<Turno> guardarTurno(@RequestBody Turno turno) throws BadRequestException  {
+        // Validación inicial para asegurarnos de que los IDs de paciente y odontólogo no son nulos
+        if (turno.getPaciente() == null || turno.getPaciente().getId() == null) {
+            throw new BadRequestException("El campo 'paciente' o 'id' del paciente no puede ser nulo.");
+        }
+        if (turno.getOdontologo() == null || turno.getOdontologo().getId() == null) {
+            throw new BadRequestException("El campo 'odontologo' o 'id' del odontólogo no puede ser nulo.");
+        }
         Optional<Paciente> pacienteBuscado= pacienteService.buscarPorId(turno.getPaciente().getId());
         Optional<Odontologo> odontologoBuscado= odontologoService.buscarPorId(turno.getOdontologo().getId());
 
