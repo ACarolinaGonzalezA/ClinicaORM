@@ -1,49 +1,41 @@
-window.addEventListener('load', function () {
-    (function(){
+$(document).ready(function() {
+    getTurnos();
+});
 
-      const url = '/turnos';
-      const settings = {
-        method: 'GET'
-      }
-
-      fetch(url,settings)
-      .then(response => response.json())
-      .then(data => {
-         for(turno of data){
-            var table = document.getElementById("turnoTable");
-            var turnoRow =table.insertRow();
-            let tr_id = turno.id;
-            turnoRow.id = tr_id;
-
-            let deleteButton = '<button' +
-                                      ' id=' + '\"' + 'btn_delete_' + turno.id + '\"' +
-                                      ' type="button" onclick="deleteBy('+turno.id+')" class="btn btn-danger btn_delete">' +
-                                      '&times' +
-                                      '</button>';
-
-            let updateButton = '<button' +
-                                      ' id=' + '\"' + 'btn_id_' + turno.id + '\"' +
-                                      ' type="button" onclick="findBy('+turno.id+')" class="btn btn-info btn_id">' +
-                                      turno.id +
-                                      '</button>';
-
-            turnoRow.innerHTML = '<td>' + updateButton + '</td>' +
-                                '<td class=\"td_idPaciente\">' + turno.paciente.nombre.toUpperCase() + '</td>' + // Usa el campo correcto de la entidad paciente
-                                '<td class=\"td_idOdontologo\">' + turno.odontologo.nombre.toUpperCase() + '</td>' + // Usa el campo correcto de la entidad odontologo
-                                '<td class=\"td_fecha\">' + turno.fecha + '</td>' +
-                                '<td>' + deleteButton + '</td>'; // Asegúrate de que este cierre está correctamente
-
-        };
-
+function getTurnos() {
+    $.ajax({
+        url: 'http://localhost:8080/turnos',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            var turnos = response;
+            var turnoTableBody = $('#turnoTableBody');
+            turnoTableBody.empty();
+            $.each(turnos, function(index, turno) {
+                turnoTableBody.append(`
+                    <tr>
+                        <td>${turno.id}</td>
+                        <td>${turno.paciente.nombre} ${turno.paciente.apellido}</td>
+                        <td>${turno.odontologo.nombre} ${turno.odontologo.apellido}</td>
+                        <td>${turno.fecha}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteTurno(${turno.id})">Eliminar</button>
+                            <button class="btn btn-primary btn-update" data-id="${turno.id}" data-fecha="${turno.fecha}" data-idPaciente="${turno.idPaciente}" data-idOdontologo="${turno.idOdontologo}">Actualizar</button>
+                        </td>
+                    </tr>
+                `);
+            });
+        },
+        error: function() {
+            alert('Error al cargar los turnos.');
+        }
     });
-    })
+}
+$(document).on('click', '.btn-update', function() {
+    var turnoId = $(this).data('id');
+    var fecha = $(this).data('fecha');
+    var idPaciente = $(this).data('idPaciente');
+    var idOdontologo = $(this).data('idOdontologo');
 
-    (function(){
-      let pathname = window.location.pathname;
-      if (pathname == "/get_turno.html") {
-          document.querySelector(".nav .nav-item a:last").addClass("active");
-      }
-    })
-
-
-    })
+    openUpdateForm(turnoId, fecha, idPaciente, idOdontologo);
+});

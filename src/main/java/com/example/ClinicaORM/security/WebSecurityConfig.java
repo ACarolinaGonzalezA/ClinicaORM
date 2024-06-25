@@ -43,6 +43,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin(withDefaults())
                 .logout(withDefaults());
+
         return http.build();
 
     }

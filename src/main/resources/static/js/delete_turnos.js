@@ -1,19 +1,15 @@
-function deleteBy(id) {
-    const url = '/turnos/' + id;
-    const settings = {
-        method: 'DELETE'
+function deleteTurno(id) {
+    if (confirm('¿Estás seguro que deseas eliminar este turno?')) {
+        $.ajax({
+            url: 'http://localhost:8080/turnos/' + id,
+            type: 'DELETE',
+            success: function(response) {
+                alert('Turno eliminado correctamente.');
+                getTurnos();
+            },
+            error: function() {
+                alert('Error al eliminar el turno.');
+            }
+        });
     }
-
-    fetch(url, settings)
-    .then(response => {
-        if (response.ok) {
-            let row_id = "#tr_" + id;
-            document.querySelector(row_id).remove();
-        } else {
-            console.error('Error al eliminar el turno:', response.status);
-        }
-    })
-    .catch(error => {
-        console.error('Error al eliminar el turno:', error);
-    });
 }
