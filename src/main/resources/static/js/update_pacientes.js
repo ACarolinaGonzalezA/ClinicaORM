@@ -1,43 +1,52 @@
-window.addEventListener('load', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const pacienteId = urlParams.get('id');
-
-    fetch(`/pacientes/buscar/id/${pacienteId}`)
-    .then(response => response.json())
-    .then(paciente => {
-        document.getElementById('paciente_id').value = paciente.id;
-        document.getElementById('nombre').value = paciente.nombre;
-        document.getElementById('apellido').value = paciente.apellido;
-        document.getElementById('cedula').value = paciente.cedula;
-        document.getElementById('email').value = paciente.email;
-    });
-
-    const formulario = document.querySelector('#updatePacienteForm');
-
-    formulario.addEventListener('submit', function(event) {
+$(document).ready(function() {
+    $('#update_paciente_form').submit(function(event) {
         event.preventDefault();
 
-        const formData = {
-            id: document.getElementById('paciente_id').value,
-            nombre: document.getElementById('nombre').value,
-            apellido: document.getElementById('apellido').value,
-            cedula: document.getElementById('cedula').value,
-            email: document.getElementById('email').value
+        var pacienteId = $('#paciente_id').val();
+        var nombre = $('#nombre').val();
+        var apellido = $('#apellido').val();
+        var cedula = $('#cedula').val();
+
+        var formData = {
+            id: pacienteId,
+            nombre: nombre,
+            apellido: apellido,
+            cedula: cedula
         };
 
-        fetch('/pacientes', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
+        $.ajax({
+            url: '/pacientes/' + pacienteId,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert('Paciente actualizado correctamente.');
+                $('#div_paciente_updating').hide();
+                getPacientes(); // Recargar la lista de pacientes actualizada
             },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Paciente actualizado con éxito');
-                window.location.href = './get_pacientes.html';
-            } else {
-                alert('Error al actualizar el paciente');
+            error: function() {
+                alert('Error al actualizar el paciente.');
+            }
+        });
+    });
+
+    // Aquí podrías agregar lógica para llenar el formulario de actualización al hacer clic en el botón de actualizar
+    $(document).on('click', '.btn-update', function() {
+        var pacienteId = $(this).data('id');
+
+        // Lógica para obtener los detalles del paciente y llenar el formulario
+        $.ajax({
+            url: '/pacientes/' + pacienteId,
+            type: 'GET',
+            success: function(response) {
+                $('#paciente_id').val(response.id);
+                $('#nombre').val(response.nombre);
+                $('#apellido').val(response.apellido);
+                $('#cedula').val(response.cedula);
+                $('#div_paciente_updating').show();
+            },
+            error: function() {
+                alert('Error al obtener los detalles del paciente.');
             }
         });
     });

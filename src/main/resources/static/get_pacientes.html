@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script type="text/javascript" src="/js/get_pacientes.js"></script>
     <script type="text/javascript" src="/js/update_pacientes.js"></script>
-    <script type="text/javascript" src="/js/delete_pelicula.js"></script>
+    <script type="text/javascript" src="/js/delete_pacientes.js"></script>
 </head>
 <body>
 <div class="container">
@@ -69,6 +69,7 @@
                     <th>Fecha</th>
                     <th>Calle</th>
                     <th>Email</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody id="pacienteTableBody">
@@ -99,7 +100,7 @@
                 </div>
 
 
-                <button type="submit" class="btn btn-primary">Modificar</button>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
             </form>
             <div id="response" style="display:none; margin:10px">
             </div>
@@ -107,5 +108,7 @@
     </div>
     <hr>
 </div>
+<script src="/js/get_pacientes.js"></script>
+<script src="/js/update_pacientes.js"></script>
 </body>
 </html>
