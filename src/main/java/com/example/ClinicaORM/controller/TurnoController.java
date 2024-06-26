@@ -4,6 +4,7 @@ import com.example.ClinicaORM.entity.Turno;
 import com.example.ClinicaORM.entity.Paciente;
 import com.example.ClinicaORM.entity.Odontologo;
 import com.example.ClinicaORM.exception.BadRequestException;
+import com.example.ClinicaORM.exception.ResourceNotFoundException;
 import com.example.ClinicaORM.service.OdontologoService;
 import com.example.ClinicaORM.service.PacienteService;
 import com.example.ClinicaORM.service.TurnoService;
@@ -46,7 +47,7 @@ public class TurnoController {
         }
     }
     @GetMapping
-    public ResponseEntity<List<Turno>> buscarTodos(){
+    public ResponseEntity<List<Turno>> buscarTodos() {
         return ResponseEntity.ok(turnoService.listarTodos());
     }
 
@@ -55,13 +56,14 @@ public class TurnoController {
         return ResponseEntity.ok(turnoService.buscarPorId(id));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarTurno(@PathVariable Long id){
+    public ResponseEntity<String> eliminarTurno(@PathVariable Long id) throws ResourceNotFoundException {
         Optional<Turno> turnoBuscado= turnoService.buscarPorId(id);
         if(turnoBuscado.isPresent()){
             turnoService.eliminarTurno(id);
             return ResponseEntity.ok("Turno eliminado con exito");
         }else{
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Turno no encontrado");
+            //return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/{id}")

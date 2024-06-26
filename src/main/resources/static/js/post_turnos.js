@@ -1,64 +1,54 @@
-window.addEventListener('load', function () {
-    const formulario = document.querySelector('#add_new_turno');
+document.addEventListener("DOMContentLoaded", function () {
+  // Agregar Turno
+  document
+    .getElementById("addTurnoForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+      const turno = {
+        paciente: { id: document.getElementById("turnoPacienteId").value },
+        odontologo: { id: document.getElementById("turnoOdontologoId").value },
+        fecha: document.getElementById("turnoFecha").value,
+      };
 
-    formulario.addEventListener('submit', function (event) {
-     event.preventDefault();
-
-        const formData = {
-             id: document.querySelector('#id').value,
-                        paciente: {
-                            id: document.querySelector('#idPaciente').value
-                        },
-                        odontologo: {
-                            id: document.querySelector('#idOdontologo').value
-                        },
-                        fecha: document.querySelector('#fecha').value
-                    };
-        const url = '/turnos';
-        const settings = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
+      fetch("/turnos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(turno),
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error("Error al agregar el turno");
         }
-
-        fetch(url, settings)
-            .then(response => response.json())
-            .then(data => {
-                 let successAlert = '<div class="alert alert-success alert-dismissible">' +
-                     '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
-                     '<strong></strong> Turno agregado </div>'
-
-                 document.querySelector('#response').innerHTML = successAlert;
-                 document.querySelector('#response').style.display = "block";
-                 resetUploadForm();
-
-            })
-            .catch(error => {
-                    let errorAlert = '<div class="alert alert-danger alert-dismissible">' +
-                                     '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
-                                     '<strong> Error intente nuevamente</strong> </div>'
-
-                      document.querySelector('#response').innerHTML = errorAlert;
-                      document.querySelector('#response').style.display = "block";
-                     resetUploadForm();})
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Turno agregado:", data);
+        showAlert("Turno agregado exitosamente");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        showAlert("Error al agregar el turno", "error");
+      });
     });
 
-    function resetUploadForm(){
-        document.querySelector('#id').value = "";
-        document.querySelector('#idPaciente').value = "";
-        document.querySelector('#idOdontologo').value = "";
-        document.querySelector('#fecha').value = "";
+      // Función para mostrar el alert
+  function showAlert(message, type = "success") {
+    const alertContainer = document.createElement("div");
+    alertContainer.className = `toast toast-top toast-end`;
+    alertContainer.innerHTML = `
+    <div class="alert alert-${type}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>${message}</span>
+    <div/>`;
 
-    }
+    document.body.appendChild(alertContainer);
 
-    (function(){
-        let pathname = window.location.pathname;
-        if(pathname === "/"){
-            document.querySelector(".nav .nav-item a:first").addClass("active");
-        } else if (pathname == "/post_turnos.html") {
-            document.querySelector(".nav .nav-item a:last").addClass("active");
-        }
-    })();
+    // Remover el alert después de 3 segundos
+    setTimeout(() => {
+      alertContainer.remove();
+    }, 3000);
+  }
 });

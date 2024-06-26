@@ -1,6 +1,7 @@
 package com.example.ClinicaORM.controller;
 
 import com.example.ClinicaORM.entity.Odontologo;
+import com.example.ClinicaORM.exception.ResourceNotFoundException;
 import com.example.ClinicaORM.service.OdontologoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class OdontologoController {
     public ResponseEntity<Odontologo> guardarOdontologo(@RequestBody Odontologo odontologo){
         return ResponseEntity.ok(odontologoService.guardarOdontologo(odontologo));
     }
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> actualizarOdontologo(@PathVariable Long id, @RequestBody Odontologo odontologo) {
         Optional<Odontologo> odontologoBuscado = odontologoService.buscarPorId(id);
         if (odontologoBuscado.isPresent()) {
@@ -53,13 +54,15 @@ public class OdontologoController {
         return ResponseEntity.ok(odontologoService.listarTodos());
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarOdontologo(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarOdontologo(@PathVariable Long id) throws ResourceNotFoundException {
         Optional<Odontologo> odontologoBuscado = odontologoService.buscarPorId(id);
         if (odontologoBuscado.isPresent()) {
             odontologoService.eliminarOdontologo(id);
             return ResponseEntity.ok("odontologo eliminado con éxito");
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Odontologo no encontrado");
+            //return ResponseEntity.notFound().build();
+
         }
     }
 }

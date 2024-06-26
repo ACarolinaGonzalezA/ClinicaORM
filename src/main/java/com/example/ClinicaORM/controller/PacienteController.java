@@ -2,6 +2,7 @@ package com.example.ClinicaORM.controller;
 
 import com.example.ClinicaORM.entity.Odontologo;
 import com.example.ClinicaORM.entity.Paciente;
+import com.example.ClinicaORM.exception.BadRequestException;
 import com.example.ClinicaORM.exception.ResourceNotFoundException;
 import com.example.ClinicaORM.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class PacienteController {
     private PacienteService pacienteService;
 
     @PostMapping //--> nos permite persistir los datos que vienen desde la vista
-    public ResponseEntity<Paciente> guardarPaciente(@RequestBody Paciente paciente){
+    public ResponseEntity<Paciente> guardarPaciente(@RequestBody Paciente paciente) {
         return ResponseEntity.ok(pacienteService.guardarPaciente(paciente));
     }
     @PutMapping("/{id}")

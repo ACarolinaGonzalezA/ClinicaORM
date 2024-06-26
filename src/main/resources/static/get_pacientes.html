@@ -1,114 +1,117 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="night">
+
 <head>
-    <title>Pacientes</title>
+    <title>Listado Pacientes</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="/js/get_pacientes.js"></script>
-    <script type="text/javascript" src="/js/update_pacientes.js"></script>
-    <script type="text/javascript" src="/js/delete_pacientes.js"></script>
 </head>
+
 <body>
-<div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.html">Inicio</a>
+<nav class="mb-1 h-20" id="navbar-container">
+</nav>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pacientes
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="./post_pacientes.html">Guardar</a></li>
-                            <li><a class="dropdown-item" href="./get_pacientes.html">Listar</a></li>
+<div class="divider"></div>
 
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Odontologos
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="./post_odontologos.html">Guardar</a></li>
-                            <li><a class="dropdown-item" href="get_odontologos.html">Listar</a></li>
+<h1 class="text-5xl font-bold text-center">Listado Pacientes</h1>
 
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Turnos
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="./post_turnos.html">Guardar</a></li>
-                            <li><a class="dropdown-item" href="./get_turnos.html">Listar</a></li>
+<main class="mt-8 justify-center">
+    <div class="max-w-5xl mx-auto rounded-md overflow-hidden">
+        <table id="pacientesTable" class="table table-zebra">
+            <!-- head -->
+            <thead class="bg-base-300">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cédula</th>
+                <th class="max-w-32">Domicilio</th>
+                <th>Email</th>
+                <th>Editar/Eliminar</th>
+            </tr>
+            </thead>
+            <tbody id="pacientesTableBody">
+            </tbody>
+        </table>
+    </div>
+</main>
 
-                        </ul>
-                    </li>
-
-                </ul>
-
-            </div>
-        </div>
-    </nav>
-    <div id="div_paciente_table">
-        <h1>Listado de Pacientes</h1>
-        <div class="row col-md-20 table-responsive">
-            <table id="pacienteTable" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Cedula</th>
-                    <th>Fecha</th>
-                    <th>Calle</th>
-                    <th>Email</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody id="pacienteTableBody">
-                </tbody>
-            </table>
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Confirmar Eliminación</h3>
+        <p class="py-4">¿Estás seguro de que deseas eliminar este Paciente?</p>
+        <div class="modal-action">
+            <button id="cancelDeleteButton" class="btn btn-success">Cancelar</button>
+            <button id="confirmDeleteButton" class="btn btn-error">Eliminar</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6" style="display: none;
-											background-color:#e6fffa; padding:10px; border-radius:3px"
-             id="div_paciente_updating">
-            <form id="update_paciente_form">
-                <div class="form-group">
-                    <label >Id:</label>
-                    <input type="text" class="form-control" id="paciente_id" readonly>
-                </div>
-                <div class="form-group">
-                    <label >Nombre:</label>
-                    <input type="text" class="form-control" placeholder="nombre" id="nombre">
-                </div>
-                <div class="form-group">
-                    <label >Apellido:</label>
-                    <input type="text" class="form-control" placeholder="apellido" id="apellido">
-                </div>
-                <div class="form-group">
-                    <label >Cedula:</label>
-                    <input type="text" class="form-control" placeholder="cedula" id="cedula">
-                </div>
+</dialog>
 
+<dialog id="updateModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Actualizar</h3>
 
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-            </form>
-            <div id="response" style="display:none; margin:10px">
+        <form id="updatePacienteForm" class="p-2 flex gap-3 flex-col">
+            <input id="pacienteId" type="number" class="hidden" />
+            <input id="pacienteFechaIngreso" type="date" class="hidden" />
+
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Nombre:
+                    <input id="pacienteNombre" type="text" placeholder="Juan Carlos" required />
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Apellido:
+                    <input class="w-32" id="pacienteApellido" type="text" placeholder="Bodoque" required />
+                </label>
             </div>
-        </div>
+
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Cédula:
+                    <input id="pacienteCedula" type="text" placeholder="098742546" required />
+                </label>
+
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Email:
+                    <input class="w-36" id="pacienteEmail" type="text" placeholder="juanCb@juan.es" required />
+                </label>
+            </div>
+
+            Domicilio:
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Calle:
+                    <input id="pacienteDomicilioCalle" type="text" placeholder="Av.Street" required />
+                </label>
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Numero:
+                    <input class="w-32" id="pacienteDomicilioNumero" type="number" placeholder="134" required />
+                </label>
+            </div>
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Localidad:
+                    <input id="pacienteDomicilioLocalidad" type="text" placeholder="Michigan" required />
+                </label>
+                <label class="input input-bordered flex items-center gap-2 sm:w-1/2">
+                    Provincia:
+                    <input class="w-32" id="pacienteDomicilioProvincia" type="text" placeholder="Ohio" required />
+                </label>
+            </div>
+            <div class="modal-action">
+                <button type="button" id="updateCancelButton" class="btn btn-warning">Cancelar</button>
+                <button type="submit" id="updateConfirmButton" class="btn btn-success">Actualizar</button>
+            </div>
+        </form>
     </div>
-    <hr>
-</div>
-<script src="/js/get_pacientes.js"></script>
-<script src="/js/update_pacientes.js"></script>
+</dialog>
+
+<script type="text/javascript" src="js/base.js"></script>
 </body>
+
 </html>

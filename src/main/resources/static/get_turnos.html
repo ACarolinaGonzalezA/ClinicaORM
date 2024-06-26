@@ -1,109 +1,86 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="night">
+
 <head>
-    <title>Listado</title>
+    <title>Listado Turnos</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="/js/get_turnos.js"></script>
-    <script type="text/javascript" src="/js/update_turnos.js"></script>
-    <script type="text/javascript" src="/js/delete_turnos.js"></script>
+
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.html">Inicio</a>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Pacientes
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="./post_pacientes.html">Guardar</a></li>
-                        <li><a class="dropdown-item" href="./get_pacientes.html">Listar</a></li>
-
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="./index.html" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Odontologos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="./post_odontologos.html">Guardar</a></li>
-                        <li><a class="dropdown-item" href="get_odontologos.html">Listar</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Turnos
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Guardar</a></li>
-                        <li><a class="dropdown-item" href="#">Listar</a></li>
-
-                    </ul>
-                </li>
-
-            </ul>
-
-        </div>
-    </div>
+<nav class="mb-1 h-20" id="navbar-container">
 </nav>
-<div class="container">
-    <div id="div_turno_table">
-        <h1>Lista de turnos</h1>
-        <div class="row col-md-6 table-responsive">
-            <table id="turnoTable" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Paciente</th>
-                    <th>Odontólogo</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody id="turnoTableBody">
-                </tbody>
-            </table>
+
+<div class="divider"></div>
+
+<h1 class="text-5xl font-bold text-center">Listado Turnos</h1>
+
+<main class="mt-8 justify-center">
+    <div class="max-w-2xl mx-auto rounded-md overflow-hidden">
+        <table id="turnoTable" class="table table-zebra">
+            <!-- head -->
+            <thead class="bg-base-300">
+            <tr>
+                <th>ID</th>
+                <th>Paciente</th>
+                <th>Odontólogo</th>
+                <th>Fecha</th>
+                <th>Editar/Eliminar</th>
+            </tr>
+            </thead>
+            <tbody id="turnosTableBody">
+
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<dialog id="confirmDeleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Confirmar Eliminación</h3>
+        <p class="py-4">¿Estás seguro de que deseas eliminar este Turno?</p>
+        <div class="modal-action">
+            <button id="cancelDeleteButton" class="btn btn-success">Cancelar</button>
+            <button id="confirmDeleteButton" class="btn btn-error">Eliminar</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6" style="display: none; background-color:#e6fffa; padding:10px; border-radius:3px" id="div_turno_updating">
-            <h3>Actualizar Turno</h3>
-            <form id="update_turno_form">
-                <div class="form-group">
-                    <label for="turno_id">ID:</label>
-                    <input type="text" class="form-control" id="turno_id" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="fecha">Fecha:</label>
-                    <input type="date" class="form-control" id="fecha" placeholder="Ingrese la fecha" required>
-                </div>
-                <div class="form-group">
-                    <label>ID Paciente:</label>
-                    <input type="text" class="form-control" placeholder="ID Paciente" id="idPaciente">
-                </div>
-                <div class="form-group">
-                    <label>ID Odontólogo:</label>
-                    <input type="text" class="form-control" placeholder="ID Odontólogo" id="idOdontologo">
-                </div>
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-            </form>
-            <div id="response" style="display:none; margin-top:10px"></div>
-        </div>
+</dialog>
+
+<dialog id="updateModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Actualizar</h3>
+
+        <form id="updateTurnoForm" class="p-2 flex gap-3 flex-col">
+            <input id="turnoId" type="number" class="hidden" />
+
+            <label class="input input-bordered flex items-center gap-2">
+                ID Paciente:
+                <input id="turnoPacienteId" type="number" class="grow" placeholder="123" required />
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                ID Odontologo:
+                <input id="turnoOdontologoId" type="number" class="grow" placeholder="123" required />
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                <input type="date" id="turnoFecha" class="grow" placeholder="Fecha" required />
+            </label>
+
+            <div class="modal-action">
+                <button type="button" id="updateCancelButton" class="btn btn-warning">Cancelar</button>
+                <button vtype="submit" id="updateConfirmButton" class="btn btn-success">Actualizar</button>
+            </div>
+        </form>
     </div>
-    <hr>
-</div>
-<script src="/js/get_turnos.js"></script>
-<script src="/js/update_turnos.js"></script>
+</dialog>
+
+
+<script type="text/javascript" src="js/base.js"></script>
+
 </body>
+
+
 </html>
